@@ -1,0 +1,49 @@
+import type { Series, SeriesInput } from '#shared/types'
+import { episodeWatched } from '#shared/series-actions'
+
+export function useSeries() {
+  const { data, status, refresh } = useFetch<Series[]>('/api/series', { key: 'series', default: () => [] })
+  return { series: data, status, refresh }
+}
+
+/** Mutations. Call in setup. Every mutation refreshes the list; errors become toasts (401 → login). */
+export function useSeriesApi() {
+  const { toastError } = useApiError()
+  const toast = useToast()
+  const { data: cached } = useNuxtData<Series[]>('series')
+  const refreshList = () => refreshNuxtData('series')
+
+  async function run<T>(request: () => Promise<T>, errorTitle: string): Promise<T | undefined> {
+    try {
+      return await request()
+    }
+    catch (e) {
+      toastError(e, errorTitle)
+      return undefined
+    }
+    finally {
+      await refreshList()
+    }
+  }
+
+  return {
+    create: async (input: SeriesInput) => {
+      const created = await run(() => $fetch<Series>('/api/series', { method: 'POST', body: input }), 'Could not add series')
+      if (created) toast.add({ title: `Added "${created.name}"`, color: 'success', icon: 'i-lucide-check' })
+      return created
+    },
+    update: (id: string, input: SeriesInput) =>
+      run(() => $fetch<Series>(`/api/series/${id}`, { method: 'PUT', body: input }), 'Could not save series'),
+    remove: async (id: string) =>
+      (await run(() => $fetch(`/api/series/${id}`, { method: 'DELETE' }).then(() => true), 'Could not delete series')) ?? false,
+    watchEpisode: async (id: string) => {
+      const previous = cached.value
+      if (previous) cached.value = previous.map(s => (s.id === id ? (episodeWatched(s) ?? s) : s))
+      const ok = await run(() => $fetch(`/api/series/${id}/episode-watched`, { method: 'POST' }).then(() => true), 'Could not mark episode')
+      if (!ok && previous) cached.value = previous
+    },
+    finishSeason: async (id: string) => {
+      await run(() => $fetch(`/api/series/${id}/season-finished`, { method: 'POST' }), 'Could not finish season')
+    },
+  }
+}
