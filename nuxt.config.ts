@@ -7,6 +7,17 @@ export default defineNuxtConfig({
   runtimeConfig: {
     session: { maxAge: 60 * 60 * 24 * 30 },
   },
+  routeRules: {
+    // clickjacking protection; no full CSP because Nuxt emits inline scripts
+    '/**': {
+      headers: {
+        'X-Frame-Options': 'DENY',
+        'Content-Security-Policy': "frame-ancestors 'none'",
+        'X-Content-Type-Options': 'nosniff',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+      },
+    },
+  },
   app: {
     head: {
       title: 'Series Planner',
