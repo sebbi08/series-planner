@@ -1,6 +1,6 @@
 # Manual test checklist
 
-Run against a COPY of production data (`npm run dev:db -- --reset`, then `npm run dev`), or against a release image on series-new.
+Run against a release image on series-new (real data), or locally with `npm run dev:db` + `npm run dev` (starts with an empty database — create users with `scripts/create-user.mjs`; items that need existing legacy accounts or the old app only apply on series-new).
 
 ## Auth
 - [ ] Existing account logs in; afterwards `Users.<name>` has `passwordHash`, and `password`/`salt` are unchanged
