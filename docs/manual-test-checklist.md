@@ -11,6 +11,8 @@ Run against a COPY of production data (`npm run dev:db -- --reset`, then `npm ru
 - [ ] No "Create account" link while ALLOW_SIGNUP=false; `/api/auth/register` → 404
 - [ ] Logout returns to /login; / redirects to /login when logged out
 - [ ] Deleting the session cookie then clicking "+" → one "Session expired" toast → /login
+- [ ] Session cookie deleted, then resume/focus the tab → one "Session expired" toast and /login
+- [ ] Behind Traefik on series-new: re-run this section over HTTPS (secure cookie is set and sent)
 
 ## List
 - [ ] Sections and order match the old app for every user (Running by weekday then name, Upcoming by date, Not started, Paused)
@@ -35,8 +37,13 @@ Run against a COPY of production data (`npm run dev:db -- --reset`, then `npm ru
 
 ## Live sync
 - [ ] Two tabs: change in tab A appears in tab B within ~1 s
+- [ ] Mongo stopped while the list is open, then focus the tab → the list stays visible and an error toast shows; after Mongo restarts, focus → it updates
+- [ ] Restarting the container while a tab is open → the list catches up when the event stream reconnects
+- [ ] Behind Traefik on series-new: re-run this section (SSE works through the proxy)
 
 ## Appearance and mobile (375 × 812)
+Run this section on a real iPhone and a real Android device on series-new before cutover.
+
 - [ ] Light / Dark / System; no wrong-theme flash on reload; theme-color meta follows the mode
 - [ ] Header collapses to title + menu; FAB bottom-right respects the safe area
 - [ ] Add/Edit opens as a bottom sheet; number steppers and the calendar work inside it
@@ -44,6 +51,8 @@ Run against a COPY of production data (`npm run dev:db -- --reset`, then `npm ru
 - [ ] "Add to Home Screen" shows the icon and opens standalone
 
 ## Operations
+Re-run this section behind Traefik on series-new (HTTPS, SSE through the proxy, secure cookie).
+
 - [ ] `/api/health` → ok / db up / correct version; 503 while Mongo is stopped; recovers when it starts again
 - [ ] Container health status becomes `healthy`
 - [ ] `node .output/server/scripts/create-user.mjs <name>` works inside the container
