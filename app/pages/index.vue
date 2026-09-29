@@ -52,7 +52,7 @@ watch([() => route.query.focus, () => series.value.length], async ([focus]) => {
       :ui="{ trailing: 'pe-1' }"
     >
       <template #trailing>
-        <UButton v-if="search" color="neutral" variant="link" icon="i-lucide-x" aria-label="Clear search" @click="search = ''" />
+        <UButton v-if="search" color="neutral" variant="link" icon="i-lucide-x" class="min-h-11 min-w-11 justify-center" aria-label="Clear search" @click="search = ''" />
         <UKbd v-else value="/" class="hidden sm:inline-flex" />
       </template>
     </UInput>
@@ -74,7 +74,7 @@ watch([() => route.query.focus, () => series.value.length], async ([focus]) => {
       icon="i-lucide-tv"
       title="No series yet"
       description="Add the first series you want to keep track of."
-      :actions="[{ label: 'Add series', icon: 'i-lucide-plus', onClick: () => openCreate() }]"
+      :actions="[{ label: 'Add series', icon: 'i-lucide-plus', class: 'min-h-11', onClick: () => openCreate() }]"
     />
 
     <p v-else-if="!groups.length" class="py-8 text-center text-muted">No series match “{{ search }}”.</p>
