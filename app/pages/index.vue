@@ -2,7 +2,7 @@
 import { groupSeries } from '#shared/sort'
 
 const route = useRoute()
-const { series, status } = useSeries()
+const { series, status, error, loaded, refresh } = useSeries()
 const { settings } = useSettings()
 const { openCreate } = useSeriesForm()
 
@@ -60,6 +60,14 @@ watch([() => route.query.focus, () => series.value.length], async ([focus]) => {
     <div v-if="status === 'pending' && !series.length" class="space-y-2">
       <USkeleton v-for="i in 6" :key="i" class="h-16 w-full" />
     </div>
+
+    <UEmpty
+      v-else-if="error && !loaded"
+      icon="i-lucide-cloud-off"
+      title="Could not load your series"
+      description="The server could not be reached. Check your connection and try again."
+      :actions="[{ label: 'Retry', icon: 'i-lucide-refresh-cw', class: 'min-h-11', onClick: () => refresh() }]"
+    />
 
     <UEmpty
       v-else-if="!series.length"

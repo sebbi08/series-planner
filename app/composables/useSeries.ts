@@ -2,8 +2,15 @@ import type { Series, SeriesInput } from '#shared/types'
 import { episodeWatched } from '#shared/series-actions'
 
 export function useSeries() {
-  const { data, status, refresh } = useFetch<Series[]>('/api/series', { key: 'series', default: () => [] })
-  return { series: data, status, refresh }
+  // Nuxt resets `data` to default() when a refresh fails. Returning the last good value from default() keeps the list on screen.
+  const last = useState<Series[] | null>('series-last', () => null)
+  const { data, status, error, refresh } = useFetch<Series[]>('/api/series', {
+    key: 'series',
+    default: () => last.value ?? [],
+    transform: (v) => { last.value = v; return v },
+  })
+  const loaded = computed(() => last.value !== null)
+  return { series: data, status, error, loaded, refresh }
 }
 
 /** Mutations. Call in setup. Every mutation refreshes the list; errors become toasts (401 → login). */

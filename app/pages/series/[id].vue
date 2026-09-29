@@ -6,7 +6,7 @@ import { formatDate, runningDayLabel } from '#shared/format'
 
 const route = useRoute()
 const id = computed(() => String(route.params.id))
-const { series, status } = useSeries()
+const { series, status, error, loaded, refresh } = useSeries()
 const { settings } = useSettings()
 const api = useSeriesApi()
 const { openEdit } = useSeriesForm()
@@ -33,6 +33,14 @@ async function doDelete() {
     <UButton color="neutral" variant="ghost" icon="i-lucide-arrow-left" label="Back" class="-ml-2 min-h-11" @click="back" />
 
     <USkeleton v-if="status === 'pending' && !item" class="h-64 w-full" />
+
+    <UEmpty
+      v-else-if="error && !loaded"
+      icon="i-lucide-cloud-off"
+      title="Could not load this series"
+      description="The server could not be reached. Check your connection and try again."
+      :actions="[{ label: 'Retry', icon: 'i-lucide-refresh-cw', class: 'min-h-11', onClick: () => refresh() }]"
+    />
 
     <UEmpty
       v-else-if="!item"

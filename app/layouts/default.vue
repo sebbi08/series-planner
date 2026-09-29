@@ -5,6 +5,21 @@ const { user, clear } = useUserSession()
 const colorMode = useColorMode()
 const { openCreate } = useSeriesForm()
 
+// Background refreshes keep the last good data on failure (see useSeries); surface the failure once, here.
+const { error: seriesError } = useSeries()
+const { error: settingsError } = useSettings()
+const { toastError } = useApiError()
+const toast = useToast()
+if (import.meta.client) {
+  watch([seriesError, settingsError], ([a, b]) => {
+    const e = a ?? b
+    if (!e) return toast.remove('load-error')
+    const status = (e as { statusCode?: number }).statusCode
+    if (status === 401) return toastError(e)
+    toast.add({ id: 'load-error', title: 'Could not load data', description: 'Showing the last known data. It will retry when you return to this tab.', color: 'error', icon: 'i-lucide-circle-alert' })
+  }, { immediate: true })
+}
+
 async function logout() {
   await clear()
   await navigateTo('/login')
