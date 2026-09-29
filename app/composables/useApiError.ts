@@ -21,7 +21,7 @@ export function useApiError() {
       redirecting = true
       toast.add({ id: 'session-expired', title: 'Session expired', description: 'Please log in again.', color: 'warning', icon: 'i-lucide-log-in' })
       void clear()
-        .then(async () => { await navigateTo('/login') })
+        .then(async () => { clearUserData(); await navigateTo('/login') })
         .finally(() => { redirecting = false })
       return
     }

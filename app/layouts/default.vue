@@ -22,6 +22,7 @@ if (import.meta.client) {
 
 async function logout() {
   await clear()
+  clearUserData()
   await navigateTo('/login')
 }
 

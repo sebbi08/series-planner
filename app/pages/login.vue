@@ -29,6 +29,7 @@ async function onSubmit(event: FormSubmitEvent<typeof state>) {
       body: { name: event.data.name, password: event.data.password },
     })
     await refreshSession()
+    clearUserData()
     await navigateTo('/')
   }
   catch (e) {
