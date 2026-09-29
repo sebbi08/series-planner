@@ -8,7 +8,7 @@ const open = computed({ get: () => state.value.open, set: (v: boolean) => { stat
 </script>
 
 <template>
-  <UModal v-if="isDesktop" v-model:open="open" :title="title">
+  <UModal v-if="isDesktop" v-model:open="open" :title="title" :close="{ class: 'min-h-11 min-w-11' }">
     <template #body>
       <SeriesForm :key="state.key" :series="state.series" @saved="close" @cancel="close" />
     </template>
