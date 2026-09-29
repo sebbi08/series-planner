@@ -7,7 +7,7 @@ const bodySchema = z.object({
 
 export default defineEventHandler(async (event) => {
   const { name, password } = await readValidatedBody(event, bodySchema.parse)
-  const key = `${getRequestIP(event, { xForwardedFor: true }) ?? 'unknown'}|${name.toLowerCase()}`
+  const key = `${clientIp(event)}|${name.toLowerCase()}`
   assertLoginAllowed(key)
 
   const user = await usersCollection().findOne({ name })
