@@ -10,6 +10,6 @@ export default defineAppConfig({
     },
     input: { variants: { size: { xl: { base: 'min-h-11' } } } },
     select: { variants: { size: { xl: { base: 'min-h-11' } } } },
-    inputNumber: { variants: { size: { xl: { base: 'min-h-11' } } } },
+    inputNumber: { variants: { size: { xl: 'min-h-11' } } },
   },
 })
