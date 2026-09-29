@@ -85,7 +85,8 @@ async function doDelete() {
           size="xl"
           block
           variant="soft"
-          :disabled="!canWatchEpisode(item)"
+          :disabled="!canWatchEpisode(item) || api.isBusy(item.id)"
+          :loading="api.isBusy(item.id)"
           @click="api.watchEpisode(item.id)"
         />
         <UButton
@@ -94,7 +95,8 @@ async function doDelete() {
           size="xl"
           block
           variant="soft"
-          :disabled="!canFinishSeason(item)"
+          :disabled="!canFinishSeason(item) || api.isBusy(item.id)"
+          :loading="api.isBusy(item.id)"
           @click="api.finishSeason(item.id)"
         />
       </div>

@@ -40,6 +40,7 @@ function onRowClick(e: MouseEvent) {
       <button
         v-if="canPlusOne"
         type="button"
+        :disabled="api.isBusy(series.id)"
         tabindex="-1"
         class="flex w-24 flex-col items-center justify-center gap-1 bg-primary text-xs font-medium text-inverted"
         @click="api.watchEpisode(series.id); revealed = false"
@@ -76,6 +77,7 @@ function onRowClick(e: MouseEvent) {
         color="primary"
         variant="soft"
         class="min-h-11 min-w-11 justify-center"
+        :loading="api.isBusy(series.id)"
         :aria-label="`Mark next episode of ${series.name} as watched`"
         @click="api.watchEpisode(series.id)"
       />

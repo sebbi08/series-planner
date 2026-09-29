@@ -20,6 +20,21 @@ export function useSeriesApi() {
   const { data: cached } = useNuxtData<Series[]>('series')
   const refreshList = () => refreshNuxtData('series')
 
+  // in-flight guard per series id, so a double tap cannot fire the same action twice
+  const busy = useState<Record<string, boolean>>('series-busy', () => ({}))
+  const isBusy = (id: string) => !!busy.value[id]
+  async function guarded(id: string, fn: () => Promise<void>) {
+    if (busy.value[id]) return
+    busy.value = { ...busy.value, [id]: true }
+    try {
+      await fn()
+    }
+    finally {
+      const { [id]: _done, ...rest } = busy.value
+      busy.value = rest
+    }
+  }
+
   async function run<T>(request: () => Promise<T>, errorTitle: string): Promise<T | undefined> {
     try {
       return await request()
@@ -44,12 +59,13 @@ export function useSeriesApi() {
     remove: async (id: string) =>
       (await run(() => $fetch(`/api/series/${id}`, { method: 'DELETE' }).then(() => true), 'Could not delete series')) ?? false,
     // optimistic; run()'s refresh afterwards re-syncs with the server, which also rolls back a failed request
-    watchEpisode: async (id: string) => {
+    watchEpisode: (id: string) => guarded(id, async () => {
       if (cached.value) cached.value = cached.value.map(s => (s.id === id ? (episodeWatched(s) ?? s) : s))
       await run(() => $fetch(`/api/series/${id}/episode-watched`, { method: 'POST' }), 'Could not mark episode')
-    },
-    finishSeason: async (id: string) => {
+    }),
+    finishSeason: (id: string) => guarded(id, async () => {
       await run(() => $fetch(`/api/series/${id}/season-finished`, { method: 'POST' }), 'Could not finish season')
-    },
+    }),
+    isBusy,
   }
 }
