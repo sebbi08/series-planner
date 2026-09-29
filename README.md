@@ -48,7 +48,8 @@ Publishing a release runs `.github/workflows/release.yml`, which pushes `ghcr.io
 The login rate limit keys on the right-most `X-Forwarded-For` entry, which is the one Traefik appends. The app must therefore only be reachable through Traefik: the compose service uses `expose`, not `ports`. Publishing port 3000 directly would let clients spoof the header and bypass the limit.
 
 1. On the server, log in to GHCR once (PAT with `read:packages`): `docker login ghcr.io -u sebbi08`
-2. Add to `.env`: `NUXT_SESSION_PASSWORD=...` and `ALLOW_SIGNUP=false`
+2. Add to the `.env` **next to `docker-compose.yml`** (Compose reads `${...}` from there and silently substitutes an empty string if a variable is missing): `NUXT_SESSION_PASSWORD=<at least 32 random characters>` (e.g. append it with `echo "NUXT_SESSION_PASSWORD=$(openssl rand -base64 48)" >> .env`) and `ALLOW_SIGNUP=false`. After changing it, recreate the container with `docker compose up -d series-new` (`restart` keeps the old environment).
+   If logins fail with a 500, check `docker compose logs series-new | grep '\[config\]'` or `/api/health` (`session: misconfigured`); the length inside the container: `docker compose exec series-new sh -c 'echo ${#NUXT_SESSION_PASSWORD}'`.
 3. Add the service to `docker-compose.yml`:
 
    ```yaml
