@@ -20,9 +20,19 @@ const groups = computed(() => {
 
 // "Back" from the detail page lands here with ?focus=<id>: scroll to it and flash a ring
 const highlightId = ref<string | null>(null)
+const nuxtApp = useNuxtApp()
+// Nuxt's router resets the scroll to the top once the page has finished rendering; scroll after that
+const afterPageFinish = () => new Promise<void>((resolve) => {
+  const timer = setTimeout(resolve, 400)
+  nuxtApp.hooks.hookOnce('page:finish', () => { clearTimeout(timer); resolve() })
+})
 watch([() => route.query.focus, () => series.value.length], async ([focus]) => {
   if (typeof focus !== 'string' || !series.value.length) return
   await nextTick()
+  if (import.meta.client) {
+    await afterPageFinish()
+    await new Promise(resolve => requestAnimationFrame(resolve))
+  }
   document.getElementById(`s-${focus}`)?.scrollIntoView({ block: 'center' })
   highlightId.value = focus
   setTimeout(() => { highlightId.value = null }, 1600)
