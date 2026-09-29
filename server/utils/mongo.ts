@@ -11,14 +11,18 @@ function mongoUrl(): string {
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
 
-async function ensureIndexes(database: Db) {
-  await database.collection('Series').createIndex({ user: 1 })
+async function ensureIndex(database: Db, collection: string, field: string, options: { unique?: boolean } = {}) {
   try {
-    await database.collection('Users').createIndex({ name: 1 }, { unique: true })
+    await database.collection(collection).createIndex({ [field]: 1 }, options)
   }
   catch (e) {
-    console.warn('[mongo] could not create unique index on Users.name:', (e as Error).message)
+    console.warn(`[mongo] could not create index on ${collection}.${field}:`, (e as Error).message)
   }
+}
+
+async function ensureIndexes(database: Db) {
+  await ensureIndex(database, 'Series', 'user')
+  await ensureIndex(database, 'Users', 'name', { unique: true })
 }
 
 /** Connects with exponential backoff (1s → 30s), forever. The driver handles reconnects after the first success. */
