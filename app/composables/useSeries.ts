@@ -36,11 +36,10 @@ export function useSeriesApi() {
       run(() => $fetch<Series>(`/api/series/${id}`, { method: 'PUT', body: input }), 'Could not save series'),
     remove: async (id: string) =>
       (await run(() => $fetch(`/api/series/${id}`, { method: 'DELETE' }).then(() => true), 'Could not delete series')) ?? false,
+    // optimistic; run()'s refresh afterwards re-syncs with the server, which also rolls back a failed request
     watchEpisode: async (id: string) => {
-      const previous = cached.value
-      if (previous) cached.value = previous.map(s => (s.id === id ? (episodeWatched(s) ?? s) : s))
-      const ok = await run(() => $fetch(`/api/series/${id}/episode-watched`, { method: 'POST' }).then(() => true), 'Could not mark episode')
-      if (!ok && previous) cached.value = previous
+      if (cached.value) cached.value = cached.value.map(s => (s.id === id ? (episodeWatched(s) ?? s) : s))
+      await run(() => $fetch(`/api/series/${id}/episode-watched`, { method: 'POST' }), 'Could not mark episode')
     },
     finishSeason: async (id: string) => {
       await run(() => $fetch(`/api/series/${id}/season-finished`, { method: 'POST' }), 'Could not finish season')
