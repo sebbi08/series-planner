@@ -10,6 +10,8 @@ export default defineNuxtPlugin(() => {
     if (isLoggedIn && !source) {
       source = new EventSource('/api/events')
       source.addEventListener('series-changed', refresh)
+      // EventSource reconnects on its own; catch up on whatever was missed while the server was away
+      source.addEventListener('open', refresh)
     }
     else if (!isLoggedIn && source) {
       source.close()
