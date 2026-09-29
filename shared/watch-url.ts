@@ -11,7 +11,7 @@ export const WATCH_PLACEHOLDERS = [
 
 /** Old app's burningseries slug rules. */
 export function burningSeriesSlug(name: string): string {
-  let slug = name.replace(/[:.;&''`´ ]/g, '-').replace(/-+/g, '-')
+  let slug = name.replace(/[:.;&'’`´ ]/g, '-').replace(/-+/g, '-')
   if (slug.endsWith('-')) slug = slug.slice(0, -1)
   return slug
 }
