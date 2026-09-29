@@ -48,7 +48,7 @@ async function onSubmit(event: FormSubmitEvent<SeriesInput>) {
 <template>
   <UForm :schema="seriesInputSchema" :state="state" class="space-y-4" @submit="onSubmit">
     <UFormField label="Name" name="name" required>
-      <UInput v-model="state.name" size="xl" class="w-full" autofocus />
+      <UInput v-model="state.name" size="xl" class="w-full" :autofocus="series === null" />
     </UFormField>
 
     <div class="grid grid-cols-2 gap-3">
