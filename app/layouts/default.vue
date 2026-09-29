@@ -53,6 +53,6 @@ const menu = computed<DropdownMenuItem[][]>(() => [
       class="fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-40 size-14 justify-center rounded-full shadow-lg sm:hidden"
       @click="openCreate()"
     />
-    <!-- Task 9: <SeriesFormOverlay /> -->
+    <SeriesFormOverlay />
   </div>
 </template>
