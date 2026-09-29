@@ -1,0 +1,33 @@
+{
+  "name": "series-planner",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "node .output/server/index.mjs",
+    "typecheck": "nuxt typecheck",
+    "postinstall": "nuxt prepare",
+    "dev:db": "bash scripts/dev-db.sh"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@iconify-json/lucide": "^1.2.137",
+    "@internationalized/date": "^3.12.4",
+    "@nuxt/ui": "^4.11.2",
+    "@vueuse/core": "^14.4.0",
+    "mongodb": "^7.7.0",
+    "nuxt": "^4.5.2",
+    "nuxt-auth-utils": "^0.5.30",
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "typescript": "~6.0.3",
+    "vue-tsc": "^3.3.11"
+  }
+}
