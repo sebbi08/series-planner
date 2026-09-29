@@ -8,6 +8,6 @@ export function useSettings() {
     default: () => last.value ?? { watchUrlTemplate: null },
     transform: (v) => { last.value = v; return v },
   })
-  const loaded = computed(() => last.value !== null)
+  const loaded = computed(() => last.value != null)
   return { settings: data, status, error, loaded, refresh }
 }

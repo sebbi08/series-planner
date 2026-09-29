@@ -9,7 +9,7 @@ export function useSeries() {
     default: () => last.value ?? [],
     transform: (v) => { last.value = v; return v },
   })
-  const loaded = computed(() => last.value !== null)
+  const loaded = computed(() => last.value != null)
   return { series: data, status, error, loaded, refresh }
 }
 
