@@ -68,6 +68,7 @@ async function onSubmit(event: FormSubmitEvent<typeof state>) {
         variant="link"
         color="neutral"
         block
+        class="min-h-11"
         :label="mode === 'login' ? 'No account yet? Create one' : 'Already have an account? Log in'"
         @click="mode = mode === 'login' ? 'register' : 'login'"
       />

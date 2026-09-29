@@ -1,3 +1,6 @@
+// Several parallel requests can 401 at once; only redirect (and toast) once.
+let redirecting = false
+
 export function useApiError() {
   const toast = useToast()
   const { clear } = useUserSession()
@@ -14,8 +17,12 @@ export function useApiError() {
   function toastError(e: unknown, title = 'Action failed') {
     const status = (e as { statusCode?: number, status?: number })?.statusCode ?? (e as { status?: number })?.status
     if (status === 401) {
-      toast.add({ title: 'Session expired', description: 'Please log in again.', color: 'warning', icon: 'i-lucide-log-in' })
-      void clear().then(async () => { await navigateTo('/login') })
+      if (redirecting) return
+      redirecting = true
+      toast.add({ id: 'session-expired', title: 'Session expired', description: 'Please log in again.', color: 'warning', icon: 'i-lucide-log-in' })
+      void clear()
+        .then(async () => { await navigateTo('/login') })
+        .finally(() => { redirecting = false })
       return
     }
     toast.add({ title, description: messageOf(e), color: 'error', icon: 'i-lucide-circle-alert' })

@@ -13,15 +13,15 @@ async function logout() {
 const menu = computed<DropdownMenuItem[][]>(() => [
   [{ label: user.value?.name ?? '', icon: 'i-lucide-user', type: 'label' }],
   [
-    { label: 'Settings', icon: 'i-lucide-settings', to: '/settings' },
+    { label: 'Settings', icon: 'i-lucide-settings', to: '/settings', class: 'min-h-11' },
     {
       label: colorMode.value === 'dark' ? 'Light mode' : 'Dark mode',
       icon: colorMode.value === 'dark' ? 'i-lucide-sun' : 'i-lucide-moon',
-      class: 'sm:hidden',
+      class: 'min-h-11 sm:hidden',
       onSelect: () => { colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark' },
     },
   ],
-  [{ label: 'Logout', icon: 'i-lucide-log-out', onSelect: logout }],
+  [{ label: 'Logout', icon: 'i-lucide-log-out', onSelect: logout, class: 'min-h-11' }],
 ])
 </script>
 
