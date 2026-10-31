@@ -1,0 +1,19 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "dependencyDashboard": true,
+  "automerge": false,
+  "lockFileMaintenance": { "enabled": false },
+  "packageRules": [
+    { "description": "Nie automatisch mergen", "matchPackageNames": ["*"], "automerge": false }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "MongoDB-Image im lokalen Dev-Script",
+      "managerFilePatterns": ["/(^|/)scripts/dev-db\\.sh$/"],
+      "matchStrings": ["IMAGE=(?<depName>mongo):(?<currentValue>[^\\s@]+)"],
+      "datasourceTemplate": "docker"
+    }
+  ]
+}
