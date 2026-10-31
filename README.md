@@ -7,12 +7,12 @@ Track which episode of which series you are on. Nuxt 4 + Nuxt UI rewrite of the 
 ```bash
 cp .env.example .env            # set NUXT_SESSION_PASSWORD (openssl rand -base64 48)
 npm install
-npm run dev:db                  # Mongo 8 on :27018, data in .data/db (empty on first run)
+npm run dev:db                  # Mongo 9 on :27018, data in .data/db (empty on first run)
 npm run dev                     # http://localhost:3000
 npx nuxt typecheck
 ```
 
-On a fresh database, create a login with `set -a; source .env; set +a; node scripts/create-user.mjs <name>`. To start over, stop the container (`docker rm -f sp-dev-mongo`) and delete `.data/` (its files belong to the container's mongodb user, so remove them via `docker run --rm -v "$PWD/.data:/d" mongo:8.0.32 rm -rf /d/db`). Manual verification: [docs/manual-test-checklist.md](docs/manual-test-checklist.md).
+On a fresh database, create a login with `set -a; source .env; set +a; node scripts/create-user.mjs <name>`. To start over, stop the container (`docker rm -f sp-dev-mongo`) and delete `.data/` (its files belong to the container's mongodb user, so remove them via `docker run --rm -v "$PWD/.data:/d" mongo:9.0.4 rm -rf /d/db`). Manual verification: [docs/manual-test-checklist.md](docs/manual-test-checklist.md).
 
 ## Configuration
 
