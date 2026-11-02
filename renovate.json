@@ -15,5 +15,7 @@
       "matchStrings": ["IMAGE=(?<depName>mongo):(?<currentValue>[^\\s@]+)"],
       "datasourceTemplate": "docker"
     }
-  ]
+  ],
+  "npmrc": "allow-remote=all",
+  "npmrcMerge": true
 }
