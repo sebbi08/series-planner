@@ -1,13 +1,13 @@
 # syntax=docker/dockerfile:1
 # Build once on the runner's native platform; .output is plain JS, so it runs on every target platform.
-FROM --platform=$BUILDPLATFORM node:22-alpine AS build
+FROM --platform=$BUILDPLATFORM node:26-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM node:22-alpine
+FROM node:26-alpine
 ARG APP_VERSION=dev
 ENV NODE_ENV=production HOST=0.0.0.0 PORT=3000 APP_VERSION=$APP_VERSION
 LABEL org.opencontainers.image.source="https://github.com/sebbi08/series-planner"
