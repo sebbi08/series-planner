@@ -5,8 +5,8 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   colorMode: { storage: 'cookie' },
   runtimeConfig: {
-    // password: '' = module default; the real value comes from NUXT_SESSION_PASSWORD at runtime
-    session: { password: '', maxAge: 60 * 60 * 24 * 30 },
+    // the session cookie is sealed with a secret derived from Nuxt's appSecret, set at runtime via NUXT_APP_SECRET
+    session: { maxAge: 60 * 60 * 24 * 30 },
   },
   routeRules: {
     // clickjacking protection; no full CSP because Nuxt emits inline scripts

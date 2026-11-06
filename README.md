@@ -5,7 +5,7 @@ Track which episode of which series you are on. Nuxt 4 + Nuxt UI rewrite of the 
 ## Development
 
 ```bash
-cp .env.example .env            # set NUXT_SESSION_PASSWORD (openssl rand -base64 48)
+cp .env.example .env            # set NUXT_APP_SECRET (openssl rand -base64 48)
 npm install
 npm run dev:db                  # Mongo 9 on :27018, data in .data/db (empty on first run)
 npm run dev                     # http://localhost:3000
@@ -19,7 +19,7 @@ On a fresh database, create a login with `set -a; source .env; set +a; node scri
 | Variable | Description |
 |---|---|
 | `DB` | Mongo connection, e.g. `root:pw@mongo:27017/SeriesPlaner2?authSource=admin` (`mongodb://` optional) |
-| `NUXT_SESSION_PASSWORD` | ≥ 32 random characters; changing it logs everyone out |
+| `NUXT_APP_SECRET` | ≥ 32 random characters; seals the session cookie, changing it logs everyone out. Replaces `NUXT_SESSION_PASSWORD` (no longer used since nuxt-auth-utils 0.6) |
 | `ALLOW_SIGNUP` | `true` enables self-registration (default: closed) |
 
 ## Users
@@ -48,8 +48,8 @@ Publishing a release runs `.github/workflows/release.yml`, which pushes `ghcr.io
 The login rate limit keys on the right-most `X-Forwarded-For` entry, which is the one Traefik appends. The app must therefore only be reachable through Traefik: the compose service uses `expose`, not `ports`. Publishing port 3000 directly would let clients spoof the header and bypass the limit.
 
 1. On the server, log in to GHCR once (PAT with `read:packages`): `docker login ghcr.io -u sebbi08`
-2. Add to the `.env` **next to `docker-compose.yml`** (Compose reads `${...}` from there and silently substitutes an empty string if a variable is missing): `NUXT_SESSION_PASSWORD=<at least 32 random characters>` (e.g. append it with `echo "NUXT_SESSION_PASSWORD=$(openssl rand -base64 48)" >> .env`) and `ALLOW_SIGNUP=false`. After changing it, recreate the container with `docker compose up -d series-new` (`restart` keeps the old environment).
-   If logins fail with a 500, check `docker compose logs series-new | grep '\[config\]'` or `/api/health` (`session: misconfigured`); the length inside the container: `docker compose exec series-new sh -c 'echo ${#NUXT_SESSION_PASSWORD}'`.
+2. Add to the `.env` **next to `docker-compose.yml`** (Compose reads `${...}` from there and silently substitutes an empty string if a variable is missing): `NUXT_APP_SECRET=<at least 32 random characters>` (e.g. append it with `echo "NUXT_APP_SECRET=$(openssl rand -base64 48)" >> .env`) and `ALLOW_SIGNUP=false`. After changing it, recreate the container with `docker compose up -d series-new` (`restart` keeps the old environment).
+   If logins fail with a 500, check `docker compose logs series-new | grep '\[config\]'` or `/api/health` (`session: misconfigured`); the length inside the container: `docker compose exec series-new sh -c 'echo ${#NUXT_APP_SECRET}'`.
 3. Add the service to `docker-compose.yml`:
 
    ```yaml
@@ -58,7 +58,7 @@ The login rate limit keys on the right-most `X-Forwarded-For` entry, which is th
      restart: unless-stopped
      environment:
        DB: root:${SERIES_PLANNER_DB_PW}@mongo:27017/SeriesPlaner2?authSource=admin
-       NUXT_SESSION_PASSWORD: ${NUXT_SESSION_PASSWORD}
+       NUXT_APP_SECRET: ${NUXT_APP_SECRET}
        ALLOW_SIGNUP: ${ALLOW_SIGNUP:-false}
      depends_on: [mongo]
      expose: [3000]

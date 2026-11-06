@@ -54,7 +54,7 @@ Run this section on a real iPhone and a real Android device on series-new before
 Re-run this section behind Traefik on series-new (HTTPS, SSE through the proxy, secure cookie).
 
 - [ ] `/api/health` → ok / db up / session ok / correct version; 503 while Mongo is stopped; recovers when it starts again
-- [ ] With `NUXT_SESSION_PASSWORD` unset or shorter than 32 chars: startup logs a `[config]` error and `/api/health` → 503 `session: misconfigured`
+- [ ] With `NUXT_APP_SECRET` unset or shorter than 32 chars: startup logs a `[config]` error and `/api/health` → 503 `session: misconfigured`
 - [ ] Container health status becomes `healthy`
 - [ ] `node .output/server/scripts/create-user.mjs <name>` works inside the container
 - [ ] Publishing a GitHub release pushes `ghcr.io/sebbi08/series-planner` for linux/amd64 and linux/arm64

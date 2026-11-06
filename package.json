@@ -21,7 +21,7 @@
     "@vueuse/core": "^15.0.0",
     "mongodb": "^7.8.0",
     "nuxt": "^4.5.2",
-    "nuxt-auth-utils": "^0.5.30",
+    "nuxt-auth-utils": "^0.6.0",
     "tailwindcss": "^4.3.3",
     "zod": "^4.6.5"
   },
