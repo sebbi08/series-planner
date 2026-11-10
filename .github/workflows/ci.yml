@@ -3,7 +3,9 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
+    # Renovate only opens a PR once its branch has checks (prCreation:
+    # not-pending), so its update branches are checked on push too.
+    branches: [main, "renovate/**"]
 
 permissions:
   contents: read
