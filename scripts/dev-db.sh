@@ -5,7 +5,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 NAME=sp-dev-mongo
-IMAGE=mongo:9.0.4
+IMAGE=mongo:9.0.8
 
 docker rm -f "$NAME" >/dev/null 2>&1 || true
 mkdir -p .data/db
